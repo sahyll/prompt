@@ -22,7 +22,7 @@ const UpdatePrompt = () => {
     const getPromptDetails = async () =>{
       console.log("use effect is working broski")
         const response = await fetch(`/api/prompt/${promptId}`)
-        const data = response.json();
+        const data = await response.json();
         console.log("the prompt details are:", data)
         setPost({
             prompt:data.prompt,
@@ -33,37 +33,38 @@ const UpdatePrompt = () => {
       getPromptDetails();
     }
   },[promptId]);
-//   const createPrompt= async(e)=>{
-//     e.preventDefault();
-//     setSubmitting(true);
-//     try{
-//         const response = await fetch('/api/prompt/new',{
-//             method:'POST',
-//             body:JSON.stringify({
-//                 prompt:post.prompt,
-//                 userId: session?.user.id,
-//                 tag:post.tag
-//             })
-//         })
+  const updatePrompt= async(e)=>{
+    e.preventDefault();
+    setSubmitting(true);
+    if(!promptId) return alert("Prompt not found!");
 
-//         if(response.ok){
-//             router.push('/');
-//         }
-//     }catch(error)
-//     {
-//         console.log(error)
-//     } finally{
-//         setSubmitting(false);
-//     }
+    try{
+        const response = await fetch(`/api/prompt/${promptId}`,{
+            method:'PATCH',
+            body:JSON.stringify({
+                prompt:post.prompt,
+                tag:post.tag
+            })
+        })
 
- // }
+        if(response.ok){
+            router.push('/');
+        }
+    }catch(error)
+    {
+        console.log(error)
+    } finally{
+        setSubmitting(false);
+    }
+
+ }
   return (
     <Form
-        type="Create"
+        type="Edit"
         post={post}
         setPost={setPost}
         submitting={submitting}
-        handleSubmit={()=>{}}
+        handleSubmit={updatePrompt}
      />
   )
 }
