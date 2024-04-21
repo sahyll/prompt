@@ -45,10 +45,12 @@ export const DELETE = async (request, { params }) => {
         await connectToDB();
 
         // Find the prompt by ID and remove it
-        await Prompt.findByIdAndRemove(params.id);
+        await Prompt.findByIdAndDelete(params.id);
 
         return new Response("Prompt deleted successfully", { status: 200 });
     } catch (error) {
-        return new Response("Error deleting prompt", { status: 550 });
+        console.error("Error deleting prompt:", error);
+        return new Response("Error deleting prompt: " + error.message, { status: 500 });
     }
+    
 };
